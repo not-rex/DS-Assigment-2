@@ -1,0 +1,17 @@
+id:W001
+name:Station Alpha
+state:California
+time_zone:PST
+lat:34.05
+lon:-118.25
+local_date_time:2024-04-27T10:00:00
+local_date_time_full:Saturday, April 27, 2024 10:00:00 AM
+air_temp:25.5
+apparent_t:27.0
+cloud:Partly Cloudy
+dewpt:15.0
+press:1015.2
+rel_hum:60
+wind_dir:NW
+wind_spd_kmh:15
+wind_spd_kt:8
