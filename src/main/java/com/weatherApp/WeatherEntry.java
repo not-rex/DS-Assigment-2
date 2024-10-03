@@ -1,6 +1,7 @@
 package com.weatherApp;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Objects;
 
 public class WeatherEntry {
     @JsonProperty("id")
@@ -212,5 +213,61 @@ public class WeatherEntry {
 
     public void setLastUpdated(long lastUpdated) {
         this.lastUpdated = lastUpdated;
+    }
+
+    /**
+     * Overrides the default equals method to compare WeatherEntry objects based on their unique 'id'.
+     *
+     * @param o The object to compare with.
+     * @return True if both objects have the same 'id', false otherwise.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        WeatherEntry that = (WeatherEntry) o;
+
+        return Objects.equals(id, that.id);
+    }
+
+    /**
+     * Overrides the default hashCode method to generate hash based on the unique 'id'.
+     *
+     * @return The hash code based on 'id'.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    /**
+     * Overrides the toString method for better readability when printing WeatherEntry objects.
+     *
+     * @return A string representation of the WeatherEntry.
+     */
+    @Override
+    public String toString() {
+        return "WeatherEntry{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", state='" + state + '\'' +
+                ", timeZone='" + timeZone + '\'' +
+                ", lat=" + lat +
+                ", lon=" + lon +
+                ", localDateTime='" + localDateTime + '\'' +
+                ", localDateTimeFull='" + localDateTimeFull + '\'' +
+                ", airTemp=" + airTemp +
+                ", apparentT=" + apparentT +
+                ", cloud='" + cloud + '\'' +
+                ", dewpt=" + dewpt +
+                ", press=" + press +
+                ", relHum=" + relHum +
+                ", windDir='" + windDir + '\'' +
+                ", windSpdKmh=" + windSpdKmh +
+                ", windSpdKt=" + windSpdKt +
+                ", timestamp=" + timestamp +
+                ", lastUpdated=" + lastUpdated +
+                '}';
     }
 }

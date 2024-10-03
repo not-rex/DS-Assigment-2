@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -11,6 +12,7 @@ public class WeatherDataStore {
     private List<WeatherEntry> dataList;
     private String filePath;
     private ObjectMapper objectMapper;
+    private static final long EXPIRATION_THRESHOLD_MILLIS = 24 * 60 * 60 * 1000; // 24 hours
 
     public WeatherDataStore(String filePath) {
         this.filePath = filePath;
@@ -116,6 +118,8 @@ public class WeatherDataStore {
      * Expires old data based on predefined criteria.
      */
     public void expireOldData() {
-        // Implement your data expiration logic here
+        long currentTime = System.currentTimeMillis();
+        dataList.removeIf(entry -> (currentTime - entry.getLastUpdated()) > EXPIRATION_THRESHOLD_MILLIS);
     }
+    
 }
