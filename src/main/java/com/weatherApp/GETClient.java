@@ -29,7 +29,7 @@ public class GETClient {
         }
     }
 
-    private static String parseServerUrl(String input) {
+    static String parseServerUrl(String input) {
         if (!input.startsWith("http://") && !input.startsWith("https://")) {
             input = "http://" + input;
         }
@@ -43,7 +43,7 @@ public class GETClient {
      * @param stationId Optional station ID to filter the data.
      * @throws IOException If an I/O error occurs.
      */
-    private static void sendGetRequest(String serverUrl, String stationId) throws IOException {
+    static void sendGetRequest(String serverUrl, String stationId) throws IOException {
         clock.tick();
         String endpoint = serverUrl + "/weather.json" + (stationId != null ? "?id=" + stationId : "");
         URL url = new URL(endpoint);
@@ -85,7 +85,7 @@ public class GETClient {
      *
      * @param jsonResponse The JSON string received from the server.
      */
-    private static void displayData(String jsonResponse) {
+    static void displayData(String jsonResponse) {
         try {
             List<WeatherEntry> entries = objectMapper.readValue(jsonResponse, new TypeReference<List<WeatherEntry>>() {});
             for (WeatherEntry entry : entries) {

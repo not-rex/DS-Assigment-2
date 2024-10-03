@@ -1,4 +1,3 @@
-// LamportClockTest.java
 package com.weatherApp;
 
 import static org.junit.jupiter.api.Assertions.*;
