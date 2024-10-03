@@ -1,5 +1,5 @@
 JDK_ARCHIVE = jdk-17_linux-x64_bin.tar.gz
-JDK_DIR = jdk-17
+JDK_DIR = jdk-17.0.12
 JDK_URL = https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.tar.gz
 JAVA = $(JDK_DIR)/bin/java
 JAR_FILE = target/WeatherAggregationSystem-1.0-SNAPSHOT.jar
