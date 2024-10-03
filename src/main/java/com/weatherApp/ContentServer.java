@@ -1,4 +1,3 @@
-// ContentServer.java
 package com.weatherApp;
 
 import com.fasterxml.jackson.databind.ObjectMapper;

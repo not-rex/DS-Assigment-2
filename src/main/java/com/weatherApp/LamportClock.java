@@ -1,4 +1,3 @@
-// LamportClock.java
 package com.weatherApp;
 
 public class LamportClock {

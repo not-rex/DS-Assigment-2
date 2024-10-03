@@ -1,4 +1,3 @@
-// WeatherDataStore.java
 package com.weatherApp;
 
 import com.fasterxml.jackson.core.type.TypeReference;
