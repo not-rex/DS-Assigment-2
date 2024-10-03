@@ -1,37 +1,31 @@
+JDK_ARCHIVE = jdk-17_linux-x64_bin.tar.gz
+JDK_DIR = jdk-17
+JDK_URL = https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.tar.gz
+JAVA = $(JDK_DIR)/bin/java
 JAR_FILE = target/WeatherAggregationSystem-1.0-SNAPSHOT.jar
 PACKAGE_DIR = com.weatherApp
-JAVA_CMD = java
-JDK_DIR = jdk-17
-PORTABLE_JAVA = $(JDK_DIR)/bin/java
 
-.PHONY: run clean os-check debug
+.PHONY: run clean debug
 
-os-check:
-	@echo "Checking the operating system..."
-	@if uname -a | grep -i "linux"; then \
-		echo "Linux system detected"; \
-	elif uname -a | grep -i "darwin"; then \
-		echo "macOS system detected"; \
-	else \
-		echo "Unknown operating system, defaulting to generic run"; \
+run: check-jdk $(JAR_FILE)
+	@echo "Running the application with Portable JDK..."
+	@$(JAVA) -cp $(JAR_FILE) $(PACKAGE_DIR).AggregationServer
+
+check-jdk:
+	@if [ ! -d $(JDK_DIR) ]; then \
+		if [ ! -f $(JDK_ARCHIVE) ]; then \
+			echo "Downloading JDK..."; \
+			curl -o $(JDK_ARCHIVE) $(JDK_URL); \
+		fi; \
+		echo "Extracting JDK..."; \
+		tar -xzf $(JDK_ARCHIVE); \
 	fi
 
 debug:
-	@echo "Checking Java version..."
-	@$(JAVA_CMD) -version || echo "Java not found or not in PATH"
+	@echo "Checking if Portable Java is available..."
+	@$(JAVA) -version || echo "Portable Java not found"
 	@echo "Checking if JAR file exists..."
 	@[ -f $(JAR_FILE) ] && echo "JAR file exists: $(JAR_FILE)" || echo "JAR file not found: $(JAR_FILE)"
-	@echo "Current PATH: $(PATH)"
-	@echo "Checking if required class files are in the JAR..."
-	@$(JAVA_CMD) -cp $(JAR_FILE) $(PACKAGE_DIR).AggregationServer || echo "AggregationServer not found or failed to execute"
-
-run: os-check $(JAR_FILE)
-	@echo "Attempting to run with system Java..."
-	@$(JAVA_CMD) -cp $(JAR_FILE) $(PACKAGE_DIR).AggregationServer
-
-run-portable: $(JAR_FILE)
-	@echo "Running the application with Portable JDK..."
-	@$(PORTABLE_JAVA) -cp $(JAR_FILE) $(PACKAGE_DIR).AggregationServer
 
 clean:
-	rm -rf $(JAR_FILE)
+	rm -rf $(JDK_DIR) $(JDK_ARCHIVE) $(JAR_FILE)
