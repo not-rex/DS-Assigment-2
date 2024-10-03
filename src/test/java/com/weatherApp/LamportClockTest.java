@@ -21,16 +21,16 @@ public class LamportClockTest {
     @Test
     public void testUpdateWithHigherReceivedTime() {
         LamportClock clock = new LamportClock();
-        clock.tick(); // time = 1
-        clock.update(2); // time = max(1, 2) + 1 = 3
+        clock.tick();
+        clock.update(2);
         assertEquals(3, clock.getTime(), "Time after update with higher receivedTime should be 3");
     }
 
     @Test
     public void testUpdateWithLowerReceivedTime() {
         LamportClock clock = new LamportClock();
-        clock.tick(); // time = 1
-        clock.update(0); // time = max(1, 0) + 1 = 2
+        clock.tick();
+        clock.update(0);
         assertEquals(2, clock.getTime(), "Time after update with lower receivedTime should be 2");
     }
 
@@ -79,14 +79,14 @@ public class LamportClockTest {
     @Test
     public void testConcurrentUpdates() throws InterruptedException {
         LamportClock clock = new LamportClock();
-        clock.tick(); // time = 1
+        clock.tick();
 
         Thread t1 = new Thread(() -> {
-            clock.update(5); // time = max(current,5) +1
+            clock.update(5);
         });
 
         Thread t2 = new Thread(() -> {
-            clock.update(3); // time = max(current,3) +1
+            clock.update(3);
         });
 
         t1.start();

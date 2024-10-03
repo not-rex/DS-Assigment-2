@@ -19,7 +19,7 @@ public class AggregationServer {
     private static ObjectMapper objectMapper = new ObjectMapper();
 
     public static void main(String[] args) {
-        String dataStorePath = "data/weather_data.json"; // Default path
+        String dataStorePath = "data/weather_data.json";
         if (args.length > 0) {
             port = Integer.parseInt(args[0]);
         }
@@ -31,7 +31,7 @@ public class AggregationServer {
     }
 
     private static void startServer() {
-        // Initialize server (using Spark Java)
+        // Initialize server using Spark
         Spark.port(port);
 
         // Load persisted data
@@ -51,13 +51,7 @@ public class AggregationServer {
         });
     }
 
-    /**
-     * Handles PUT requests to update weather data.
-     *
-     * @param request  The incoming HTTP request.
-     * @param response The HTTP response to be sent.
-     * @return A message indicating the result of the operation.
-     */
+    // Handles PUT requests and update weather data.
     private static String handlePut(Request request, Response response) {
         String lamportTimeHeader = request.headers("Lamport-Time");
         if (lamportTimeHeader == null) {
@@ -125,13 +119,7 @@ public class AggregationServer {
         return "Data Received";
     }
 
-    /**
-     * Handles GET requests to retrieve aggregated weather data.
-     *
-     * @param request  The incoming HTTP request.
-     * @param response The HTTP response to be sent.
-     * @return JSON string of aggregated weather data.
-     */
+    // Handles GET requests to retrieve weather data.
     private static String handleGet(Request request, Response response) {
         String lamportTimeHeader = request.headers("Lamport-Time");
         if (lamportTimeHeader == null) {
@@ -154,7 +142,7 @@ public class AggregationServer {
         response.type("application/json");
         response.status(200);
         try {
-            // Serialize the list to JSON
+            // List to JSON
             return objectMapper.writeValueAsString(data);
         } catch (IOException e) {
             response.status(500);
@@ -162,9 +150,7 @@ public class AggregationServer {
         }
     }
 
-    /**
-     * Schedules periodic data expiration tasks.
-     */
+    // Schedules data expiration.
     private static void scheduleDataExpiration() {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleAtFixedRate(() -> {

@@ -1,4 +1,3 @@
-// GETClientTest.java
 package com.weatherApp;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -51,9 +50,7 @@ public class GETClientTest {
         errContent.reset();
     }
 
-    /**
-     * Test sending a valid GET request and receiving data.
-     */
+    // Test sending a valid GET request and receiving data.
     @Test
     public void testSendGetRequestSuccess() throws IOException {
         // Prepare mock response
@@ -73,7 +70,7 @@ public class GETClientTest {
         String[] args = {serverUrl, "W100"};
         GETClient.main(args);
 
-        // Prepare expected output with system-specific line separators
+        // Prepare expected output
         String ls = System.lineSeparator();
         String expectedOutput = "ID: W100" + ls +
                 "Name: Test Station A" + ls +
@@ -116,9 +113,7 @@ public class GETClientTest {
         assertEquals("", errContent.toString());
     }
 
-    /**
-     * Test sending a GET request and receiving 204 No Content.
-     */
+    // Test sending a GET request and receiving 204 No Content.
     @Test
     public void testSendGetRequestNoContent() throws IOException {
         mockWebServer.enqueue(new MockResponse()
@@ -137,9 +132,7 @@ public class GETClientTest {
         assertEquals("", errContent.toString());
     }
 
-    /**
-     * Test sending a GET request and receiving a non-200/204 response.
-     */
+    // Test sending a GET request and receiving a non-200/204 response.
     @Test
     public void testSendGetRequestFailure() throws IOException {
         mockWebServer.enqueue(new MockResponse()
@@ -158,9 +151,7 @@ public class GETClientTest {
         assertEquals("", errContent.toString());
     }
 
-    /**
-     * Test handling invalid JSON response.
-     */
+    // Test handling invalid JSON response.
     @Test
     public void testSendGetRequestInvalidJson() throws IOException {
         mockWebServer.enqueue(new MockResponse()
@@ -188,9 +179,7 @@ public class GETClientTest {
         assertEquals("", outContent.toString());
     }
 
-    /**
-     * Test handling invalid Lamport-Time header.
-     */
+    // Test handling invalid Lamport-Time header.
     @Test
     public void testSendGetRequestInvalidLamportTimeHeader() throws IOException {
         WeatherEntry entry = createWeatherEntry("W100");
@@ -235,9 +224,7 @@ public class GETClientTest {
         assertEquals(expectedError, errContent.toString());
     }
 
-    /**
-     * Helper method to create a WeatherEntry object.
-     */
+    // Helper function to create a WeatherEntry object.
     private WeatherEntry createWeatherEntry(String id) {
         WeatherEntry entry = new WeatherEntry();
         entry.setId(id);

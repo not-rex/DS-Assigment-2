@@ -40,7 +40,7 @@ public class ContentServerTest {
 
     @Test
     public void testReadFileMissingId() {
-        String filePath = "src/test/resources/missing_id_weather.txt"; // Ensure this file exists
+        String filePath = "src/test/resources/missing_id_weather.txt";
         Exception exception = assertThrows(IOException.class, () -> {
             ContentServer.readFile(filePath);
         }, "Expected IOException for missing 'id' field.");
@@ -52,7 +52,7 @@ public class ContentServerTest {
 
     @Test
     public void testReadFileWithInvalidFormat() {
-        String filePath = "src/test/resources/invalid_format_weather.txt"; // Ensure this file exists
+        String filePath = "src/test/resources/invalid_format_weather.txt";
         Exception exception = assertThrows(IOException.class, () -> {
             ContentServer.readFile(filePath);
         }, "Expected IOException for invalid format.");

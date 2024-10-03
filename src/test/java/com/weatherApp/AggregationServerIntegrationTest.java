@@ -1,4 +1,3 @@
-// AggregationServerIntegrationTest.java
 package com.weatherApp;
 
 import io.restassured.RestAssured;
@@ -21,19 +20,17 @@ public class AggregationServerIntegrationTest {
 
     private static Thread serverThread;
     private static Path tempDataStorePath;
-    private static int serverPort = 4567; // Default port
+    private static int serverPort = 4567;
 
-    /**
-     * Starts the AggregationServer before all tests.
-     */
+    // Starts the AggregationServer.
     @BeforeAll
     public void setUp() throws IOException {
-        // Create a temporary file for dataStore to ensure test isolation
+        // Create a temporary file for dataStore to test isolation
         tempDataStorePath = Files.createTempFile("weather_data_test", ".json");
         // Delete the file to start fresh
         Files.deleteIfExists(tempDataStorePath);
         
-        // Start AggregationServer in a separate thread with test-specific port and dataStore path
+        // Start AggregationServer in a separate thread
         serverThread = new Thread(() -> {
             AggregationServer.main(new String[]{String.valueOf(serverPort), tempDataStorePath.toString()});
         });
@@ -45,15 +42,13 @@ public class AggregationServerIntegrationTest {
 
         // Wait for the server to start
         try {
-            TimeUnit.SECONDS.sleep(3); // Adjust as needed based on server startup time
+            TimeUnit.SECONDS.sleep(3);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
-    /**
-     * Stops the AggregationServer and cleans up after all tests.
-     */
+    // Stops the AggregationServer and cleans up after all tests.
     @AfterAll
     public void tearDown() {
         // Stop the server
@@ -68,9 +63,7 @@ public class AggregationServerIntegrationTest {
         }
     }
 
-    /**
-     * Test case for sending a valid PUT request.
-     */
+    // Test case for sending a valid PUT request.
     @Test
     public void testPutWeatherDataSuccess() {
         WeatherEntry entry = new WeatherEntry();
@@ -105,9 +98,7 @@ public class AggregationServerIntegrationTest {
             .body(equalTo("Data Received"));
     }
 
-    /**
-     * Test case for sending a PUT request without the Lamport-Time header.
-     */
+    // Test case for sending a PUT request without the Lamport-Time header.
     @Test
     public void testPutWeatherDataMissingLamportTime() {
         WeatherEntry entry = new WeatherEntry();
@@ -133,7 +124,6 @@ public class AggregationServerIntegrationTest {
 
         given()
             .contentType(ContentType.JSON)
-            // Missing Lamport-Time header
             .body(entry)
         .when()
             .put("/weather.json")
@@ -142,9 +132,7 @@ public class AggregationServerIntegrationTest {
             .body(equalTo("Missing Lamport-Time header"));
     }
 
-    /**
-     * Test case for sending a PUT request with an invalid Lamport-Time header.
-     */
+    // Test case for sending a PUT request with an invalid Lamport-Time header.
     @Test
     public void testPutWeatherDataInvalidLamportTime() {
         WeatherEntry entry = new WeatherEntry();
@@ -170,7 +158,7 @@ public class AggregationServerIntegrationTest {
 
         given()
             .contentType(ContentType.JSON)
-            .header("Lamport-Time", "invalid") // Invalid Lamport-Time
+            .header("Lamport-Time", "invalid")
             .body(entry)
         .when()
             .put("/weather.json")
@@ -179,9 +167,7 @@ public class AggregationServerIntegrationTest {
             .body(equalTo("Invalid Lamport-Time header"));
     }
 
-    /**
-     * Test case for retrieving weather data with a valid Lamport-Time header.
-     */
+    // Test case for retrieving weather data with a valid Lamport-Time header.
     @Test
     public void testGetWeatherDataSuccess() {
         // First, send a PUT request to add data
@@ -216,7 +202,7 @@ public class AggregationServerIntegrationTest {
             .statusCode(anyOf(is(200), is(201)))
             .body(equalTo("Data Received"));
 
-        // Now, retrieve the data
+        // Retrieve the data
         given()
             .header("Lamport-Time", "3")
         .when()
@@ -227,9 +213,7 @@ public class AggregationServerIntegrationTest {
             .body("id", hasItems("W200", "W203"));
     }
 
-    /**
-     * Test case for retrieving weather data without the Lamport-Time header.
-     */
+    // Test case for retrieving weather data without the Lamport-Time header.
     @Test
     public void testGetWeatherDataMissingLamportTime() {
         given()
@@ -241,9 +225,7 @@ public class AggregationServerIntegrationTest {
             .body(equalTo("Missing Lamport-Time header"));
     }
 
-    /**
-     * Test case for retrieving weather data with an invalid Lamport-Time header.
-     */
+    // Test case for retrieving weather data with an invalid Lamport-Time header.
     @Test
     public void testGetWeatherDataInvalidLamportTime() {
         given()
@@ -255,9 +237,7 @@ public class AggregationServerIntegrationTest {
             .body(equalTo("Invalid Lamport-Time header"));
     }
 
-    /**
-     * Test case for sending a PUT request with an empty body.
-     */
+    // Test case for sending a PUT request with an empty body.
     @Test
     public void testPutWeatherDataNoContent() {
         given()
@@ -268,12 +248,10 @@ public class AggregationServerIntegrationTest {
             .put("/weather.json")
         .then()
             .statusCode(204)
-            .body(is(emptyOrNullString())); // Expecting no content
+            .body(is(emptyOrNullString()));
     }
 
-    /**
-     * Test case for sending a PUT request with an invalid Content-Type.
-     */
+    // Test case for sending a PUT request with an invalid Content-Type.
     @Test
     public void testPutWeatherDataInvalidContentType() throws IOException {
         WeatherEntry entry = new WeatherEntry();
@@ -302,7 +280,7 @@ public class AggregationServerIntegrationTest {
         String jsonBody = objectMapper.writeValueAsString(entry);
 
         given()
-            .contentType(ContentType.TEXT) // Invalid Content-Type
+            .contentType(ContentType.TEXT) // Invalid
             .header("Lamport-Time", "5")
             .body(jsonBody)
         .when()

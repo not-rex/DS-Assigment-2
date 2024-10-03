@@ -36,13 +36,8 @@ public class GETClient {
         return input;
     }
 
-    /**
-     * Sends an HTTP GET request to the server and displays the weather data.
-     *
-     * @param serverUrl The base URL of the server.
-     * @param stationId Optional station ID to filter the data.
-     * @throws IOException If an I/O error occurs.
-     */
+    // Sends an HTTP GET request to the server and displays the weather.
+
     static void sendGetRequest(String serverUrl, String stationId) throws IOException {
         clock.tick();
         String endpoint = serverUrl + "/weather.json" + (stationId != null ? "?id=" + stationId : "");
@@ -79,12 +74,7 @@ public class GETClient {
             System.out.println("GET request failed with code: " + responseCode);
         }
     }
-
-    /**
-     * Parses and displays the weather data in a readable format.
-     *
-     * @param jsonResponse The JSON string received from the server.
-     */
+// Parses and displays the weather data.
     static void displayData(String jsonResponse) {
         try {
             List<WeatherEntry> entries = objectMapper.readValue(jsonResponse, new TypeReference<List<WeatherEntry>>() {});

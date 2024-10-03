@@ -11,9 +11,8 @@ import java.nio.file.Files;
 public class ContentServer {
     private static LamportClock clock = new LamportClock();
     private static ObjectMapper objectMapper = new ObjectMapper();
-    private static HttpService httpService = new HttpServiceImpl(); // Dependency Injection
+    private static HttpService httpService = new HttpServiceImpl();
 
-    // Optional: Provide a setter for testing purposes
     public static void setHttpService(HttpService service) {
         httpService = service;
     }
@@ -36,14 +35,8 @@ public class ContentServer {
         }
     }
 
-    /**
-     * Reads the local weather data file and converts it into a WeatherEntry object.
-     *
-     * @param filePath The path to the local weather data file.
-     * @return A WeatherEntry object populated with data from the file.
-     * @throws IOException If an I/O error occurs.
-     */
-    public static WeatherEntry readFile(String filePath) throws IOException { // Made public for testing
+    // Reads the local weather data file and then converts it into a WeatherEntry object.
+    public static WeatherEntry readFile(String filePath) throws IOException {
         WeatherEntry weatherEntry = new WeatherEntry();
         File file = new File(filePath);
         if (!file.exists()) {
@@ -124,13 +117,8 @@ public class ContentServer {
         return weatherEntry;
     }
 
-    /**
-     * Sends an HTTP PUT request to the server with the weather data.
-     *
-     * @param serverUrl  The base URL of the server.
-     * @param jsonData   The WeatherEntry object to send.
-     */
-    public static void sendPutRequest(String serverUrl, WeatherEntry jsonData) { // Modified
+    // Sends an HTTP PUT request to the server.
+    public static void sendPutRequest(String serverUrl, WeatherEntry jsonData) {
         clock.tick();
 
         // Serialize WeatherEntry to JSON

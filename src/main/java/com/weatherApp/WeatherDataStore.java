@@ -20,9 +20,7 @@ public class WeatherDataStore {
         this.dataList = new CopyOnWriteArrayList<>();
     }
 
-    /**
-     * Loads persisted data from the JSON file.
-     */
+    // Loads data from the JSON file.
     public void loadPersistedData() {
         File file = new File(filePath);
         if (!file.exists()) {
@@ -35,21 +33,12 @@ public class WeatherDataStore {
         }
     }
 
-    /**
-     * Persists current data to the JSON file.
-     *
-     * @throws IOException If an I/O error occurs.
-     */
+    // Save current data to the JSON file.
     public void persistData() throws IOException {
         objectMapper.writeValue(new File(filePath), dataList);
     }
 
-    /**
-     * Saves a WeatherEntry to the data store.
-     *
-     * @param entry        The WeatherEntry to save.
-     * @param lamportTime  The Lamport timestamp.
-     */
+    // Saves a WeatherEntry to the data store.
     public void saveData(WeatherEntry entry, int lamportTime) {
         // Check if entry with same ID exists
         boolean isNew = true;
@@ -83,21 +72,12 @@ public class WeatherDataStore {
         }
     }
 
-    /**
-     * Retrieves all WeatherEntry data.
-     *
-     * @return List of WeatherEntry objects.
-     */
+    // Retrieves WeatherEntry data.
     public List<WeatherEntry> getData() {
         return dataList;
     }
 
-    /**
-     * Determines if the given ID corresponds to a new entry.
-     *
-     * @param id The ID to check.
-     * @return True if new, false otherwise.
-     */
+    // Determines if the given ID corresponds to a new entry.
     public boolean isNewEntry(String id) {
         for (WeatherEntry entry : dataList) {
             if (entry.getId().equals(id)) {
@@ -107,16 +87,12 @@ public class WeatherDataStore {
         return true;
     }
 
-    /**
-     * Clears all data from the data store.
-     */
+    // Clears all data from data store.
     public void clearData() {
         dataList.clear();
     }
 
-    /**
-     * Expires old data based on predefined criteria.
-     */
+    // Expires old data.
     public void expireOldData() {
         long currentTime = System.currentTimeMillis();
         dataList.removeIf(entry -> (currentTime - entry.getLastUpdated()) > EXPIRATION_THRESHOLD_MILLIS);

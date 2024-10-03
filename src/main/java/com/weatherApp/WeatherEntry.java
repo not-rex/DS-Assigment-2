@@ -55,7 +55,7 @@ public class WeatherEntry {
     @JsonProperty("wind_spd_kt")
     private int windSpdKt;
     
-    // Additional fields for Lamport timestamp and last updated time
+    // Lamport timestamp and last updated time
     private int timestamp;
     private long lastUpdated;
 
@@ -215,12 +215,7 @@ public class WeatherEntry {
         this.lastUpdated = lastUpdated;
     }
 
-    /**
-     * Overrides the default equals method to compare WeatherEntry objects based on their unique 'id'.
-     *
-     * @param o The object to compare with.
-     * @return True if both objects have the same 'id', false otherwise.
-     */
+    // Overrides the default equals method to compare WeatherEntry objects.
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -231,21 +226,13 @@ public class WeatherEntry {
         return Objects.equals(id, that.id);
     }
 
-    /**
-     * Overrides the default hashCode method to generate hash based on the unique 'id'.
-     *
-     * @return The hash code based on 'id'.
-     */
+    // Overrides the default hashCode method to generate hash.
     @Override
     public int hashCode() {
         return Objects.hash(id);
     }
 
-    /**
-     * Overrides the toString method for better readability when printing WeatherEntry objects.
-     *
-     * @return A string representation of the WeatherEntry.
-     */
+    // Overrides the toString method for better readability.
     @Override
     public String toString() {
         return "WeatherEntry{" +

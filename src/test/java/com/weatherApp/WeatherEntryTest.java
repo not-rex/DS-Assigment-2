@@ -57,7 +57,6 @@ public class WeatherEntryTest {
     public void testDefaultValues() {
         WeatherEntry entry = new WeatherEntry();
 
-        // Assert default values
         assertNull(entry.getId(), "Default id should be null");
         assertNull(entry.getName(), "Default name should be null");
         assertNull(entry.getState(), "Default state should be null");

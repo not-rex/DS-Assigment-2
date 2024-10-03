@@ -44,9 +44,7 @@ public class WeatherDataStoreTest {
         Files.writeString(tempFilePath, "");
     }
 
-    /**
-     * Helper method to create a WeatherEntry object.
-     */
+    // Helper method to create a WeatherEntry object.
     private WeatherEntry createWeatherEntry(String id) {
         WeatherEntry entry = new WeatherEntry();
         entry.setId(id);
@@ -71,9 +69,7 @@ public class WeatherDataStoreTest {
         return entry;
     }
 
-    /**
-     * Test loading persisted data when the file is empty.
-     */
+    // Test loading persisted data when the file is empty.
     @Test
     public void testLoadPersistedDataEmptyFile() {
         dataStore.loadPersistedData();
@@ -82,9 +78,7 @@ public class WeatherDataStoreTest {
         assertTrue(data.isEmpty(), "Data list should be empty when file is empty");
     }
 
-    /**
-     * Test loading persisted data from a non-empty file.
-     */
+    // Test loading persisted data from a non-empty file.
     @Test
     public void testLoadPersistedDataNonEmptyFile() throws IOException {
         // Create sample data
@@ -103,15 +97,13 @@ public class WeatherDataStoreTest {
         assertTrue(loadedData.contains(entry2), "Data list should contain entry2");
     }
 
-    /**
-     * Test loading persisted data from a malformed JSON file.
-     */
+    // Test loading persisted data from a malformed JSON file.
     @Test
     public void testLoadPersistedDataMalformedJson() throws IOException {
         // Write malformed JSON to temporary file
         Files.writeString(tempFilePath, "This is not valid JSON");
 
-        // Capture error output
+        // Capture error
         PrintStream originalErr = System.err;
         ByteArrayOutputStream errContent = new ByteArrayOutputStream();
         System.setErr(new PrintStream(errContent));
@@ -128,9 +120,7 @@ public class WeatherDataStoreTest {
         assertTrue(errorOutput.contains("Failed to load persisted data"), "Should print error message for malformed JSON");
     }
 
-    /**
-     * Test persisting data to the JSON file.
-     */
+    // Test persisting data to the JSON file.
     @Test
     public void testPersistData() throws IOException {
         // Add entries to dataStore
@@ -153,9 +143,7 @@ public class WeatherDataStoreTest {
         assertTrue(persistedEntries.contains(entry2), "Persisted data should contain entry2");
     }
 
-    /**
-     * Test saving a new WeatherEntry.
-     */
+    // Test saving a new WeatherEntry.
     @Test
     public void testSaveDataNewEntry() {
         WeatherEntry newEntry = createWeatherEntry("W100");
@@ -169,9 +157,7 @@ public class WeatherDataStoreTest {
         assertEquals(newEntry, data.get(0), "Data list should contain the new entry");
     }
 
-    /**
-     * Test updating an existing WeatherEntry.
-     */
+    // Test updating an existing WeatherEntry.
     @Test
     public void testSaveDataUpdateEntry() {
         // Add initial entry with timestamp 1
@@ -197,9 +183,7 @@ public class WeatherDataStoreTest {
     }
 
 
-    /**
-     * Test retrieving all WeatherEntry data.
-     */
+    // Test retrieving all WeatherEntry data.
     @Test
     public void testGetData() {
         WeatherEntry entry1 = createWeatherEntry("W100");
@@ -213,9 +197,7 @@ public class WeatherDataStoreTest {
         assertTrue(data.contains(entry2), "Data list should contain entry2");
     }
 
-    /**
-     * Test checking if an entry is new.
-     */
+    // Test checking if an entry is new.
     @Test
     public void testIsNewEntry() {
         assertTrue(dataStore.isNewEntry("W100"), "Entry W100 should be new");
@@ -226,9 +208,7 @@ public class WeatherDataStoreTest {
         assertFalse(dataStore.isNewEntry("W100"), "Entry W100 should no longer be new");
     }
 
-    /**
-     * Test clearing all data from the data store.
-     */
+    //Test clearing all data from the data store.
     @Test
     public void testClearData() {
         WeatherEntry entry1 = createWeatherEntry("W100");
@@ -245,15 +225,12 @@ public class WeatherDataStoreTest {
         assertTrue(dataAfterClear.isEmpty(), "Data list should be empty after clearing");
     }
 
-    /**
-     * Test expiring old data based on lastUpdated timestamp.
-     */
+    // Test expiring old data based on lastUpdated timestamp.
     @Test
     public void testExpireOldData() {
-        // Current time
         long currentTime = System.currentTimeMillis();
 
-        // Create entries with varying lastUpdated timestamps
+        // Create entries
         WeatherEntry recentEntry = createWeatherEntry("W100");
         recentEntry.setLastUpdated(currentTime - (23 * 60 * 60 * 1000)); // 23 hours ago
 
@@ -263,7 +240,7 @@ public class WeatherDataStoreTest {
         WeatherEntry veryOldEntry = createWeatherEntry("W102");
         veryOldEntry.setLastUpdated(currentTime - (48 * 60 * 60 * 1000)); // 48 hours ago
 
-        // Add entries to dataStore
+        // Entries to dataStore
         dataStore.saveData(recentEntry, recentEntry.getTimestamp());
         dataStore.saveData(oldEntry, oldEntry.getTimestamp());
         dataStore.saveData(veryOldEntry, veryOldEntry.getTimestamp());
@@ -285,19 +262,7 @@ public class WeatherDataStoreTest {
         assertFalse(dataAfterExpiration.contains(veryOldEntry), "Data list should not contain the very old entry");
     }
 
-    /**
-     * Placeholder test for data expiration logic.
-     * Implement as needed when expireOldData() is developed.
-     */
-    @Test
-    public void testExpireOldDataPlaceholder() {
-        // This method is now implemented
-        // The previous placeholder can be removed
-    }
-
-    /**
-     * Test persisting data after saving entries.
-     */
+    // Test persisting data after saving entries.
     @Test
     public void testPersistDataAfterSave() throws IOException {
         // Add entries to dataStore
@@ -320,9 +285,7 @@ public class WeatherDataStoreTest {
         assertTrue(persistedEntries.contains(entry2), "Persisted data should contain entry2");
     }
 
-    /**
-     * Test saving data when the entry ID does not exist.
-     */
+    // Test saving data when the entry ID does not exist.
     @Test
     public void testSaveDataWithNonExistingId() {
         WeatherEntry entry = createWeatherEntry("W102");
