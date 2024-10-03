@@ -1,9 +1,11 @@
-com\weatherApp\WeatherEntry.class
 com\weatherApp\ContentServer.class
 com\weatherApp\GETClient.class
+com\weatherApp\HttpService.class
 com\weatherApp\WeatherDataStore.class
 com\weatherApp\Utils.class
-com\weatherApp\WeatherDataStore$1.class
 com\weatherApp\AggregationServer.class
+com\weatherApp\WeatherEntry.class
+com\weatherApp\WeatherDataStore$1.class
 com\weatherApp\LamportClock.class
 com\weatherApp\GETClient$1.class
+com\weatherApp\HttpServiceImpl.class

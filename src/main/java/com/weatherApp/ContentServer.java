@@ -14,6 +14,12 @@ import java.nio.file.Files;
 public class ContentServer {
     private static LamportClock clock = new LamportClock();
     private static ObjectMapper objectMapper = new ObjectMapper();
+    private static HttpService httpService = new HttpServiceImpl(); // Dependency Injection
+
+    // Optional: Provide a setter for testing purposes
+    public static void setHttpService(HttpService service) {
+        httpService = service;
+    }
 
     public static void main(String[] args) {
         Properties prop = new Properties();
@@ -47,7 +53,7 @@ public class ContentServer {
      * @return A WeatherEntry object populated with data from the file.
      * @throws IOException If an I/O error occurs.
      */
-    private static WeatherEntry readFile(String filePath) throws IOException {
+    public static WeatherEntry readFile(String filePath) throws IOException { // Made public for testing
         WeatherEntry weatherEntry = new WeatherEntry();
         File file = new File(filePath);
         if (!file.exists()) {
@@ -135,37 +141,19 @@ public class ContentServer {
      * @param jsonData   The WeatherEntry object to send.
      * @throws IOException If an I/O error occurs.
      */
-    private static void sendPutRequest(String serverUrl, WeatherEntry jsonData) throws IOException {
+    public static void sendPutRequest(String serverUrl, WeatherEntry jsonData) throws IOException { // Made public for testing
         clock.tick();
-        String endpoint = serverUrl + "/weather.json";
-        URL url = new URL(endpoint);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("PUT");
-        conn.setRequestProperty("Content-Type", "application/json");
-        conn.setRequestProperty("Lamport-Time", String.valueOf(clock.getTime()));
-        conn.setDoOutput(true);
 
         // Serialize WeatherEntry to JSON
         String jsonString = objectMapper.writeValueAsString(jsonData);
 
-        OutputStream os = conn.getOutputStream();
-        os.write(jsonString.getBytes());
-        os.flush();
-        os.close();
+        int responseCode = httpService.sendPut(serverUrl, jsonString, clock.getTime());
 
-        int responseCode = conn.getResponseCode();
         if (responseCode == 200 || responseCode == 201) {
-            String responseTime = conn.getHeaderField("Lamport-Time");
-            if (responseTime != null) {
-                try {
-                    int receivedTime = Integer.parseInt(responseTime);
-                    clock.update(receivedTime);
-                } catch (NumberFormatException e) {
-                    System.err.println("Invalid Lamport-Time header in response.");
-                }
-            }
+            // Handle successful response
             System.out.println("Data uploaded successfully with response code: " + responseCode);
         } else {
+            // Handle failed response
             System.out.println("PUT request failed with code: " + responseCode);
             // Optionally implement retry logic
             retryPutRequest(serverUrl, jsonData, 3);

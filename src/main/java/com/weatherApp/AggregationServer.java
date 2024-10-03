@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import spark.Request;
 import spark.Response;
 import spark.Spark;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -14,13 +15,18 @@ import java.util.List;
 public class AggregationServer {
     private static int port = 4567;
     private static LamportClock clock = new LamportClock();
-    private static WeatherDataStore dataStore = new WeatherDataStore("data/weather_data.json");
+    private static WeatherDataStore dataStore;
     private static ObjectMapper objectMapper = new ObjectMapper();
 
     public static void main(String[] args) {
+        String dataStorePath = "data/weather_data.json"; // Default path
         if (args.length > 0) {
             port = Integer.parseInt(args[0]);
         }
+        if (args.length > 1) {
+            dataStorePath = args[1];
+        }
+        dataStore = new WeatherDataStore(dataStorePath);
         startServer();
     }
 
