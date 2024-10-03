@@ -7,7 +7,18 @@ JAR_FILE = weatherApp.jar
 
 SOURCES := $(shell find $(SRC_DIR)/$(PACKAGE_DIR) -name "*.java")
 
-all: $(JAR_FILE)
+.PHONY: all clean debug
+
+all: debug $(JAR_FILE)
+
+debug:
+	@echo "Checking Java version..."
+	@java -version || echo "Java not found"
+	@echo "Checking javac version..."
+	@$(JAVAC) -version || echo "javac not found"
+	@echo "Current PATH: $(PATH)"
+	@echo "JAVA_HOME: $(JAVA_HOME)"
+	@echo "Source files found: $(SOURCES)"
 
 $(JAR_FILE): $(SOURCES)
 	@mkdir -p $(BIN_DIR)
