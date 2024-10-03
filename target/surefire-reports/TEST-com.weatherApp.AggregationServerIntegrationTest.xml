@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.weatherApp.LamportClockTest" time="0.005" tests="8" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.weatherApp.AggregationServerIntegrationTest" time="4.955" tests="8" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -57,12 +57,23 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="testConcurrentUpdates" classname="com.weatherApp.LamportClockTest" time="0.001"/>
-  <testcase name="testTick" classname="com.weatherApp.LamportClockTest" time="0"/>
-  <testcase name="testUpdateWithLowerReceivedTime" classname="com.weatherApp.LamportClockTest" time="0.001"/>
-  <testcase name="testInitialTime" classname="com.weatherApp.LamportClockTest" time="0"/>
-  <testcase name="testMultipleTicks" classname="com.weatherApp.LamportClockTest" time="0"/>
-  <testcase name="testMultipleUpdates" classname="com.weatherApp.LamportClockTest" time="0"/>
-  <testcase name="testConcurrentTicks" classname="com.weatherApp.LamportClockTest" time="0.001"/>
-  <testcase name="testUpdateWithHigherReceivedTime" classname="com.weatherApp.LamportClockTest" time="0"/>
+  <testcase name="testPutWeatherDataMissingLamportTime" classname="com.weatherApp.AggregationServerIntegrationTest" time="0.876">
+    <system-err><![CDATA[[Thread-2] INFO org.eclipse.jetty.util.log - Logging initialized @642ms to org.eclipse.jetty.util.log.Slf4jLog
+[Thread-2] INFO spark.embeddedserver.jetty.EmbeddedJettyServer - == Spark has ignited ...
+[Thread-2] INFO spark.embeddedserver.jetty.EmbeddedJettyServer - >> Listening on 0.0.0.0:4567
+[Thread-2] INFO org.eclipse.jetty.server.Server - jetty-9.4.48.v20220622; built: 2022-06-21T20:42:25.880Z; git: 6b67c5719d1f4371b33655ff2d047d24e171e49a; jvm 17.0.2+8-LTS-86
+[Thread-2] INFO org.eclipse.jetty.server.session - DefaultSessionIdManager workerName=node0
+[Thread-2] INFO org.eclipse.jetty.server.session - No SessionScavenger set, using defaults
+[Thread-2] INFO org.eclipse.jetty.server.session - node0 Scavenging every 600000ms
+[Thread-2] INFO org.eclipse.jetty.server.AbstractConnector - Started ServerConnector@6f009cf{HTTP/1.1, (http/1.1)}{0.0.0.0:4567}
+[Thread-2] INFO org.eclipse.jetty.server.Server - Started @779ms
+]]></system-err>
+  </testcase>
+  <testcase name="testGetWeatherDataInvalidLamportTime" classname="com.weatherApp.AggregationServerIntegrationTest" time="0.015"/>
+  <testcase name="testPutWeatherDataInvalidLamportTime" classname="com.weatherApp.AggregationServerIntegrationTest" time="0.017"/>
+  <testcase name="testPutWeatherDataSuccess" classname="com.weatherApp.AggregationServerIntegrationTest" time="0.042"/>
+  <testcase name="testPutWeatherDataNoContent" classname="com.weatherApp.AggregationServerIntegrationTest" time="0.01"/>
+  <testcase name="testGetWeatherDataSuccess" classname="com.weatherApp.AggregationServerIntegrationTest" time="0.564"/>
+  <testcase name="testGetWeatherDataMissingLamportTime" classname="com.weatherApp.AggregationServerIntegrationTest" time="0.011"/>
+  <testcase name="testPutWeatherDataInvalidContentType" classname="com.weatherApp.AggregationServerIntegrationTest" time="0.01"/>
 </testsuite>

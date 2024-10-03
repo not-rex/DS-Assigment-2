@@ -1,4 +1,5 @@
 com\weatherApp\ContentServerTest.class
 com\weatherApp\LamportClockTest.class
+com\weatherApp\AggregationServerIntegrationTest.class
 com\weatherApp\WeatherEntryTest.class
 com\weatherApp\ContentServerSendPutRequestTest.class
