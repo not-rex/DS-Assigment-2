@@ -1,3 +1,4 @@
+// ContentServer.java
 package com.weatherApp;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,9 +7,6 @@ import java.io.File;
 import java.util.Properties;
 import java.io.InputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.file.Files;
 
 public class ContentServer {
@@ -37,13 +35,6 @@ public class ContentServer {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-    }
-
-    private static String parseServerUrl(String input) {
-        if (!input.startsWith("http://") && !input.startsWith("https://")) {
-            input = "http://" + input;
-        }
-        return input;
     }
 
     /**
@@ -139,47 +130,58 @@ public class ContentServer {
      *
      * @param serverUrl  The base URL of the server.
      * @param jsonData   The WeatherEntry object to send.
-     * @throws IOException If an I/O error occurs.
      */
-    public static void sendPutRequest(String serverUrl, WeatherEntry jsonData) throws IOException { // Made public for testing
+    public static void sendPutRequest(String serverUrl, WeatherEntry jsonData) { // Modified
         clock.tick();
 
         // Serialize WeatherEntry to JSON
-        String jsonString = objectMapper.writeValueAsString(jsonData);
-
-        int responseCode = httpService.sendPut(serverUrl, jsonString, clock.getTime());
-
-        if (responseCode == 200 || responseCode == 201) {
-            // Handle successful response
-            System.out.println("Data uploaded successfully with response code: " + responseCode);
-        } else {
-            // Handle failed response
-            System.out.println("PUT request failed with code: " + responseCode);
-            // Optionally implement retry logic
-            retryPutRequest(serverUrl, jsonData, 3);
+        String jsonString;
+        try {
+            jsonString = objectMapper.writeValueAsString(jsonData);
+        } catch (IOException e) {
+            System.out.println("Failed to serialize WeatherEntry to JSON: " + e.getMessage());
+            return;
         }
-    }
 
-    /**
-     * Implements retry logic for PUT requests with exponential backoff.
-     *
-     * @param serverUrl  The base URL of the server.
-     * @param jsonData   The WeatherEntry object to send.
-     * @param retries    Number of retry attempts.
-     */
-    private static void retryPutRequest(String serverUrl, WeatherEntry jsonData, int retries) {
-        while (retries > 0) {
+        int maxRetries = 3;
+        int attempt = 0;
+
+        while (attempt <= maxRetries) {
             try {
-                Thread.sleep(1000); // Wait before retrying
-                sendPutRequest(serverUrl, jsonData);
-                return; // Success
-            } catch (IOException | InterruptedException e) {
-                retries--;
-                System.err.println("Retrying PUT request... Attempts left: " + retries);
-                if (retries == 0) {
-                    System.err.println("Failed to upload data after multiple attempts.");
+                int responseCode = httpService.sendPut(serverUrl, jsonString, clock.getTime());
+
+                if (responseCode == 200 || responseCode == 201) {
+                    System.out.println("Data uploaded successfully with response code: " + responseCode);
+                    break; // Success
+                } else {
+                    System.out.println("PUT request failed with code: " + responseCode);
+                    if (attempt == maxRetries) {
+                        System.err.println("Failed to upload data after multiple attempts.");
+                        break;
+                    }
+                    System.err.println("Retrying PUT request... Attempts left: " + (maxRetries - attempt));
+                    Thread.sleep(1000); // Wait before retrying
                 }
+            } catch (IOException e) {
+                System.out.println("PUT request failed with exception: " + e.getMessage());
+                if (attempt == maxRetries) {
+                    System.err.println("Failed to upload data after multiple attempts.");
+                    break;
+                }
+                System.err.println("Retrying PUT request... Attempts left: " + (maxRetries - attempt));
+                try {
+                    Thread.sleep(1000); // Wait before retrying
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    System.err.println("Retry interrupted.");
+                    break;
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                System.err.println("Retry interrupted.");
+                break;
             }
+            attempt++;
         }
     }
 }
